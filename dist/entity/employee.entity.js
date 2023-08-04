@@ -14,12 +14,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const typeorm_1 = require("typeorm");
 const address_entity_1 = __importDefault(require("./address.entity"));
-let Employee = class Employee {
+const abstract_entity_1 = require("./abstract.entity");
+const role_enum_1 = require("../utils/role.enum");
+let Employee = class Employee extends abstract_entity_1.AbstractEntity {
 };
-__decorate([
-    (0, typeorm_1.PrimaryGeneratedColumn)(),
-    __metadata("design:type", Number)
-], Employee.prototype, "id", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
@@ -29,17 +27,9 @@ __decorate([
     __metadata("design:type", String)
 ], Employee.prototype, "email", void 0);
 __decorate([
-    (0, typeorm_1.CreateDateColumn)(),
-    __metadata("design:type", Date)
-], Employee.prototype, "createdAt", void 0);
-__decorate([
-    (0, typeorm_1.UpdateDateColumn)(),
-    __metadata("design:type", Date)
-], Employee.prototype, "updatedAt", void 0);
-__decorate([
-    (0, typeorm_1.DeleteDateColumn)(),
-    __metadata("design:type", Date)
-], Employee.prototype, "deletedAt", void 0);
+    (0, typeorm_1.Column)({ nullable: false }),
+    __metadata("design:type", String)
+], Employee.prototype, "password", void 0);
 __decorate([
     (0, typeorm_1.Column)({ nullable: true }),
     __metadata("design:type", Number)
@@ -49,6 +39,10 @@ __decorate([
     (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", address_entity_1.default)
 ], Employee.prototype, "address", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ default: role_enum_1.Role.DEVELOPER }),
+    __metadata("design:type", String)
+], Employee.prototype, "role", void 0);
 Employee = __decorate([
     (0, typeorm_1.Entity)("employees")
 ], Employee);

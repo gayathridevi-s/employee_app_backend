@@ -18,7 +18,7 @@ class EmployeeRepository {
         });
     }
 
-    findAnEmployeeById(id: number): Promise<Employee> {
+    findAnEmployeeById(id: number): Promise<Employee | null> {
        
         return this.employeeRepository.findOne(
             {
@@ -27,6 +27,16 @@ class EmployeeRepository {
                     address:true
                 },
                 
+            }
+        );
+    }
+
+
+    findAnEmployeeByEmail(email: string): Promise<Employee> {
+       
+        return this.employeeRepository.findOne(
+            {
+                where:{email:email},                
             }
         );
     }

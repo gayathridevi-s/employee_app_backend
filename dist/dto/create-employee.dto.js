@@ -13,6 +13,7 @@ exports.CreateEmployeeDto = void 0;
 const class_validator_1 = require("class-validator");
 const create_address_dto_1 = require("./create-address.dto");
 const class_transformer_1 = require("class-transformer");
+const role_enum_1 = require("../utils/role.enum");
 class CreateEmployeeDto {
 }
 exports.CreateEmployeeDto = CreateEmployeeDto;
@@ -29,8 +30,18 @@ __decorate([
 ], CreateEmployeeDto.prototype, "email", void 0);
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], CreateEmployeeDto.prototype, "password", void 0);
+__decorate([
+    (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.ValidateNested)({ each: true }),
     (0, class_transformer_1.Type)(() => create_address_dto_1.CreateAddressDto),
     __metadata("design:type", create_address_dto_1.CreateAddressDto)
 ], CreateEmployeeDto.prototype, "address", void 0);
+__decorate([
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsEnum)(role_enum_1.Role),
+    __metadata("design:type", String)
+], CreateEmployeeDto.prototype, "role", void 0);
 //# sourceMappingURL=create-employee.dto.js.map

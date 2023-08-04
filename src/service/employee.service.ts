@@ -5,6 +5,9 @@ import Employee from "../entity/employee.entity";
 import EmployeeRepository from "../repository/employee.repository";
 import { NotFoundException } from "../Exception/not-found.exception";
 import { CreateEmployeeDto } from "../dto/create-employee.dto";
+import bcrypt from 'bcrypt';
+import jsonwebtoken from "jsonwebtoken"
+
 
 class EmployeeService {
 
@@ -15,28 +18,46 @@ class EmployeeService {
     getAllEmployees(): Promise<Employee[]> {
         return this.employeeRepository.findAllEmployees();
     }
-    getEmployeeById=async(id: number): Promise<Employee | null> => {
-        const employee= await this.employeeRepository.findAnEmployeeById(id);
-        if(!employee){
+    getEmployeeById = async (id: number): Promise<Employee | null> => {
+        const employee = await this.employeeRepository.findAnEmployeeById(id);
+        if (!employee) {
             throw new NotFoundException(`Employee with id: ${id} not found`);
         }
         return employee;
     }
-    createEmployee(createEmployeeInput: CreateEmployeeDto): Promise<Employee> {
-
+    async createEmployee(createEmployeeInput: CreateEmployeeDto): Promise<Employee> {
+        createEmployeeInput.password = await bcrypt.hash(createEmployeeInput.password, 10)
         return this.employeeRepository.saveEmployee(createEmployeeInput);
 
     }
-   async updateEmployee(id: number, name: string, email: string): Promise<Employee> {
-      const employee = await this.employeeRepository.findAnEmployeeById(id);
-      employee.name = name;
-      employee.email = email;
-    return this.employeeRepository.saveEmployee(employee);
+    async updateEmployee(id: number, name: string, email: string): Promise<Employee> {
+        const employee = await this.employeeRepository.findAnEmployeeById(id);
+        employee.name = name;
+        employee.email = email;
+        return this.employeeRepository.saveEmployee(employee);
 
     }
-    async deleteEmployee(id:number):Promise<void>{
+    loginEmployee = async (email: string, password: string) => {
+        const employee = await this.employeeRepository.findAnEmployeeByEmail(email);
+        if (!employee) {
+            throw new HttpException(400, "employee not found");
+        }
+        const result = await bcrypt.compare(password, employee.password);
+        if (!result) {
+            throw new HttpException(401, "incorrect username or password");
+        }
+        const payload = {
+            name: employee.name,
+            email: employee.email,
+            role:employee.role
+        }
+        return jsonwebtoken.sign(payload, "ABCDE", { expiresIn: "1h" });
+
+
+    }
+    async deleteEmployee(id: number): Promise<void> {
         const employee = await this.employeeRepository.findAnEmployeeById(id);
-         await this.employeeRepository.deleteEmployee(employee);
+        await this.employeeRepository.deleteEmployee(employee);
     }
 }
 export default EmployeeService;

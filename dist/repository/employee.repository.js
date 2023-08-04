@@ -19,6 +19,11 @@ class EmployeeRepository {
             },
         });
     }
+    findAnEmployeeByEmail(email) {
+        return this.employeeRepository.findOne({
+            where: { email: email },
+        });
+    }
     saveEmployee(createEmployeeDto) {
         return this.employeeRepository.save(createEmployeeDto);
     }

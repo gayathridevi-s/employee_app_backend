@@ -10,7 +10,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const typeorm_1 = require("typeorm");
-let Address = class Address {
+const abstract_entity_1 = require("./abstract.entity");
+let Address = class Address extends abstract_entity_1.AbstractEntity {
 };
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)(),
@@ -24,18 +25,6 @@ __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
 ], Address.prototype, "pincode", void 0);
-__decorate([
-    (0, typeorm_1.CreateDateColumn)(),
-    __metadata("design:type", Date)
-], Address.prototype, "createdAt", void 0);
-__decorate([
-    (0, typeorm_1.UpdateDateColumn)(),
-    __metadata("design:type", Date)
-], Address.prototype, "updatedAt", void 0);
-__decorate([
-    (0, typeorm_1.DeleteDateColumn)(),
-    __metadata("design:type", Date)
-], Address.prototype, "deletedAt", void 0);
 Address = __decorate([
     (0, typeorm_1.Entity)("Address")
 ], Address);

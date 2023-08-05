@@ -1,9 +1,8 @@
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import Employee from "./employee.entity";
-import { AbstractEntity } from "./abstract.entity";
 
 @Entity("Address")
-class Address extends AbstractEntity{
+class Address {
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -13,6 +12,18 @@ class Address extends AbstractEntity{
     @Column()
     pincode: string;
 
+    @CreateDateColumn()
+    createdAt: Date;
 
+    @UpdateDateColumn()
+    updatedAt: Date;
+
+    @DeleteDateColumn()
+    deletedAt: Date;
+    
+    @OneToOne(() => Employee, (employee) => employee.address)
+    @JoinColumn()
+    employee: Employee
+    
 }
 export default Address;

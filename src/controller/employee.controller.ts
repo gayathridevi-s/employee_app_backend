@@ -9,6 +9,7 @@ import { error } from "console";
 import authenticate from "../middleware/authenticate.middleware";
 import { authorizeRole } from "../middleware/authorize.middleware";
 import { Role } from "../utils/role.enum";
+import { UpdateEmployeeDto } from "../dto/update-employee.dto";
 class EmployeeController {
     public router: express.Router;
 
@@ -57,10 +58,10 @@ class EmployeeController {
         }
     }
     updateEmployee = async (req: express.Request, res: express.Response) => {
-        const name = req.body.name;
-        const email = req.body.email;
+        // const name = req.body.name;
+        // const email = req.body.email;
         const id = Number(req.params.id);
-        const newEmployee = await this.employeeService.updateEmployee(id, name, email);
+        const newEmployee = await this.employeeService.updateEmployee(id,req.body);
         res.status(200).send(newEmployee);
     }
     public loginEmployee = async (

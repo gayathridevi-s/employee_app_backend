@@ -7,6 +7,7 @@ import { NotFoundException } from "../Exception/not-found.exception";
 import { CreateEmployeeDto } from "../dto/create-employee.dto";
 import bcrypt from 'bcrypt';
 import jsonwebtoken from "jsonwebtoken"
+import { UpdateEmployeeDto } from "../dto/update-employee.dto";
 
 
 class EmployeeService {
@@ -30,10 +31,12 @@ class EmployeeService {
         return this.employeeRepository.saveEmployee(createEmployeeInput);
 
     }
-    async updateEmployee(id: number, name: string, email: string): Promise<Employee> {
+    async updateEmployee(id:number,updateEmployeeDto: UpdateEmployeeDto): Promise<Employee> {
         const employee = await this.employeeRepository.findAnEmployeeById(id);
-        employee.name = name;
-        employee.email = email;
+        employee.name = updateEmployeeDto.name;
+        employee.joiningDate = updateEmployeeDto.joiningDate;
+        employee.experience = updateEmployeeDto.experience;
+        employee.address = updateEmployeeDto.address;
         return this.employeeRepository.saveEmployee(employee);
 
     }
@@ -49,7 +52,7 @@ class EmployeeService {
         const payload = {
             name: employee.name,
             email: employee.email,
-            role:employee.role
+            role: employee.role
         }
         return jsonwebtoken.sign(payload, "ABCDE", { expiresIn: "1h" });
 

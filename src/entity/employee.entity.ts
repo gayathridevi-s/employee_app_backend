@@ -1,28 +1,52 @@
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import Address from "./address.entity";
-import { AbstractEntity } from "./abstract.entity";
-import { Role } from "../utils/role.enum";
+import { Role } from "./role.entity";
+import { Department } from "./department.entity";
+import { Status } from "../utils/status.enum";
 
 @Entity("employees")
-class Employee extends AbstractEntity{
-   
+class Employee{
+    @PrimaryGeneratedColumn()
+    id:number;
+
     @Column()
     name:string;
+
     @Column()
     email:string;
-    
-    @Column({nullable:false})
-    
-    password:string;
-    
-    @Column({nullable:true})
-    age:number;
 
+    @Column()
+    password:string;
+
+
+    @Column()
+    joiningDate: string;
+
+    @Column()
+    experience: number ;
+
+    @Column()
+    status: Status;
+
+    @ManyToOne(() => Department, { nullable: true })
+    department: Department;
+
+    @CreateDateColumn()
+    createdAt:Date;
+
+    @UpdateDateColumn()
+    updatedAt:Date;
+
+     @DeleteDateColumn()
+    deletedAt:Date;
+   
     @OneToOne(() => Address,{cascade:true})
     @JoinColumn()
     address: Address
 
-    @Column({default:Role.DEVELOPER})
-    role:Role;
+    @ManyToOne(() => Role, { nullable: true })
+    role: Role
+
+
 }
 export default Employee;

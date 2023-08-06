@@ -12,7 +12,6 @@ const server = express();
 server.use(express.json());
 server.use(loggerMiddleware);
 server.use("/employees", employeeRouter);
-
 server.use(errorMidleWare);
 
 (async() => {

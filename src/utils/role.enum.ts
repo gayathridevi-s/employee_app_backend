@@ -1,5 +1,7 @@
 export enum Role {
-    UI ="UI",
-    DEVELOPER="Developer",
-    HR ="HR"
+    // UI ="UI",
+    // DEVELOPER="Developer",
+    // HR ="HR",
+    ADMIN="Admin",
+    USER="User"
 }

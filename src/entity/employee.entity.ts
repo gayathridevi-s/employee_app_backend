@@ -38,7 +38,7 @@ class Employee extends AbstractEntity{
     @JoinColumn()
     address: Address
 
-    @Column({ default: Role.DEVELOPER })
+    @Column()
   role: Role;
 
 }

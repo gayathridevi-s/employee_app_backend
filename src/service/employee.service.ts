@@ -58,7 +58,7 @@ class EmployeeService {
            username: employee.username,
             role: employee.role
         }
-        return jsonwebtoken.sign(payload, "ABCDE", { expiresIn: "8h" });
+        return jsonwebtoken.sign(payload, "ABCDE", { expiresIn: "10h" });
 
 
     }

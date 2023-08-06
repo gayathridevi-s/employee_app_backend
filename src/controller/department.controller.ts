@@ -7,17 +7,20 @@ import { DepartmentService } from "../service/department.service";
 import UpdateDepartmentDto from "../dto/update-department.dto";
 import { CreateEmployeeDto } from "../dto/create-employee.dto";
 import ValidationException from "../Exception/ValidationException";
+import authenticate from "../middleware/authenticate.middleware";
+import { authorizeRole } from "../middleware/authorize.middleware";
+import { Role } from "../utils/role.enum";
 
 export class DepartmentController {
     public router: Router;
   
     constructor(private departmentService: DepartmentService) {
       this.router = express.Router();
-      this.router.post("/create", this.createDepartment);
-      this.router.put("/:id",this.updateDepartment);
-      this.router.delete("/:id",this.deleteDepartment);
-      this.router.get("/", this.getAllDepartments);
-      this.router.get("/:id", this.getDepartmentByID);
+      this.router.post("/", authenticate,authorizeRole([ Role.ADMIN]),this.createDepartment);
+      this.router.put("/:id",authenticate,authorizeRole([ Role.ADMIN]),this.updateDepartment);
+      this.router.delete("/:id",authenticate,authorizeRole([ Role.ADMIN]),this.deleteDepartment);
+      this.router.get("/",authenticate, this.getAllDepartments);
+      this.router.get("/:id",authenticate, this.getDepartmentByID);
     }
   
     createDepartment = async (

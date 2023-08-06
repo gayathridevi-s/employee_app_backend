@@ -31,7 +31,7 @@ class Employee extends AbstractEntity{
 
     @ManyToOne(() => Department, (department) => department.id)
   @JoinColumn()
-  department: number;
+  department: Department;
   
    
     @OneToOne(() => Address,{cascade:true})

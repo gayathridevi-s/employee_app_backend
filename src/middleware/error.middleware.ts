@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import HttpException from "../Exception/http.exception";
-import { ValidationException } from "../Exception/ValidationException";
+import ValidationException from "../Exception/ValidationException";
 
 export const errorMidleWare = (error: Error, req: Request, res: Response, next: NextFunction) => {
     console.error(error.stack)

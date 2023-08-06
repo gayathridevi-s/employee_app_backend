@@ -20,12 +20,12 @@ class Address extends AbstractEntity{
 
     @Column()
     country: string;
-    
+
     @Column()
     pincode: string;
 
     
-    @OneToOne(() => Employee, (employee) => employee.address)
+    // @OneToOne(() => Employee, (employee) => employee.address)
     @JoinColumn()
     employee: Employee
     

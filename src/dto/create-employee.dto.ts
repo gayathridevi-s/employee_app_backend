@@ -3,8 +3,10 @@ import { IsDateString, IsEmail, IsEnum, IsNotEmpty, IsNumber, IsString, Validate
 import { Type } from "class-transformer";
 import { Role } from "../utils/role.enum";
 import { Status } from "../utils/status.enum";
-import { Index } from "typeorm/decorator/Index";
+import { Index } from "typeorm";
 import CreateAddressDto from "./create-address.dto";
+import CreateDepartmentDto from "./create-department.dto";
+
 
 export class CreateEmployeeDto{
     @IsNotEmpty()
@@ -36,8 +38,8 @@ export class CreateEmployeeDto{
 
   
     @IsNotEmpty()
-    @IsNumber()
-    department:number
+    @Type(()=>CreateDepartmentDto)
+    department:CreateDepartmentDto;
 
     @IsNotEmpty()
     @IsEnum(Status)

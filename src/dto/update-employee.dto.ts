@@ -1,7 +1,7 @@
 import { IsDateString, IsEnum, IsNumber, IsObject, IsString, ValidateIf, ValidateNested } from "class-validator";
 import Address from "../entity/address.entity";
 
-import { Type } from "class-transformer/types/decorators/type.decorator";
+import { Type } from "class-transformer";
 import { Status } from "../utils/status.enum";
 import { Role } from "../utils/role.enum";
 import UpdateAddressDto from "./update-address.dto";

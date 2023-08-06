@@ -4,13 +4,14 @@ import express, { NextFunction } from "express";
 import { CreateEmployeeDto } from "../dto/create-employee.dto";
 import { ValidationError, validate } from "class-validator";
 import HttpException from "../Exception/http.exception";
-import { ValidationException } from "../Exception/ValidationException";
+
 import { error } from "console";
 import authenticate from "../middleware/authenticate.middleware";
 import { authorizeRole } from "../middleware/authorize.middleware";
 import { Role } from "../utils/role.enum";
 import { UpdateEmployeeDto } from "../dto/update-employee.dto";
 import { LoginEmployeeDto } from "../dto/login-employee.dto";
+import ValidationException from "../Exception/ValidationException";
 
 class EmployeeController {
     public router: express.Router;
@@ -21,11 +22,13 @@ class EmployeeController {
 
         this.router.get("/", authenticate, this.getAllEmployees);
         this.router.get("/:id", authenticate, this.getEmployeeById);
-        this.router.post("/", authenticate, authorizeRole([Role.DEVELOPER, Role.UI]), this.createEmployee);
+        this.router.post("/",   authenticate, authorizeRole([Role.HR]), this.createEmployee);
         this.router.put("/:id", this.updateEmployee);
         this.router.delete("/:id", this.deleteEmployee);
         this.router.post("/login", this.loginEmployee);
     }
+   
+  
 
     getAllEmployees = async (req: express.Request, res: express.Response) => {
         const employees = await this.employeeService.getAllEmployees();
@@ -100,10 +103,8 @@ class EmployeeController {
         const errors: ValidationError[] = await validate(plainToInstance(classType, validateInput));
         if (errors.length > 0) {
             console.log(errors);
-            // errors.forEach(error => {
-            //     error.con
-            // });
-            throw new ValidationException(400, "Validation Exception", errors);
+          
+            throw new ValidationException(errors);
         }
 
 

@@ -38,7 +38,7 @@ class EmployeeService {
         employee.experience = updateEmployeeDto.experience;
         employee.address = updateEmployeeDto.address;
         employee.status=updateEmployeeDto.status;
-      //  if()
+      
         return this.employeeRepository.saveEmployee(employee);
       }
       
@@ -58,7 +58,7 @@ class EmployeeService {
            username: employee.username,
             role: employee.role
         }
-        return jsonwebtoken.sign(payload, "ABCDE", { expiresIn: "1h" });
+        return jsonwebtoken.sign(payload, "ABCDE", { expiresIn: "8h" });
 
 
     }

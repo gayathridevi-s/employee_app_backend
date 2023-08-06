@@ -1,6 +1,10 @@
-import { IsDateString, IsEmail, IsNotEmpty, IsNumber, IsString, ValidateIf, ValidateNested } from "class-validator";
-import { CreateAddressDto } from "./create-address.dto";
+import { IsDateString, IsEmail, IsEnum, IsNotEmpty, IsNumber, IsString, ValidateIf, ValidateNested } from "class-validator";
+
 import { Type } from "class-transformer";
+import { Role } from "../utils/role.enum";
+import { Status } from "../utils/status.enum";
+import { Index } from "typeorm/decorator/Index";
+import CreateAddressDto from "./create-address.dto";
 
 export class CreateEmployeeDto{
     @IsNotEmpty()
@@ -8,9 +12,9 @@ export class CreateEmployeeDto{
     name:string;
 
     @IsNotEmpty()
+    @Index({ unique: true })
     @IsString()
-    @IsEmail()
-    email:string;
+    username: string;
 
     @IsNotEmpty()
     @ValidateNested({each:true})
@@ -30,11 +34,16 @@ export class CreateEmployeeDto{
     experience: number
 
 
-    @ValidateIf((obj) => obj.value !== undefined)
-    @IsString()
-    departmentId: string;
+  
+    @IsNotEmpty()
+    @IsNumber()
+    department:number
 
-    @ValidateIf((obj) => obj.value !== undefined)
-    @IsString()
-    roleId: string
+    @IsNotEmpty()
+    @IsEnum(Status)
+    status: Status
+
+    @IsNotEmpty()
+    @IsEnum(Role)
+    role: Role
 }

@@ -8,7 +8,7 @@ import { CreateEmployeeDto } from "../dto/create-employee.dto";
 import bcrypt from 'bcrypt';
 import jsonwebtoken from "jsonwebtoken"
 import { UpdateEmployeeDto } from "../dto/update-employee.dto";
-
+import { LoginEmployeeDto } from "../dto/login-employee.dto";
 
 class EmployeeService {
 
@@ -31,27 +31,31 @@ class EmployeeService {
         return this.employeeRepository.saveEmployee(createEmployeeInput);
 
     }
-    async updateEmployee(id:number,updateEmployeeDto: UpdateEmployeeDto): Promise<Employee> {
+    async updateEmployee(id: number, updateEmployeeDto: UpdateEmployeeDto): Promise<Employee> {
         const employee = await this.employeeRepository.findAnEmployeeById(id);
         employee.name = updateEmployeeDto.name;
         employee.joiningDate = updateEmployeeDto.joiningDate;
         employee.experience = updateEmployeeDto.experience;
         employee.address = updateEmployeeDto.address;
+        employee.status=updateEmployeeDto.status;
+      //  if()
         return this.employeeRepository.saveEmployee(employee);
+      }
+      
 
-    }
-    loginEmployee = async (email: string, password: string) => {
-        const employee = await this.employeeRepository.findAnEmployeeByEmail(email);
+    
+    loginEmployee = async (loginEmployeeDto:LoginEmployeeDto) => {
+        const employee = await this.employeeRepository.findAnEmployeeByUsername(loginEmployeeDto.username);
         if (!employee) {
             throw new HttpException(400, "employee not found");
         }
-        const result = await bcrypt.compare(password, employee.password);
+        const result = await bcrypt.compare(loginEmployeeDto.password, employee.password);
         if (!result) {
             throw new HttpException(401, "incorrect username or password");
         }
         const payload = {
             name: employee.name,
-            email: employee.email,
+           username: employee.username,
             role: employee.role
         }
         return jsonwebtoken.sign(payload, "ABCDE", { expiresIn: "1h" });
@@ -63,4 +67,5 @@ class EmployeeService {
         await this.employeeRepository.deleteEmployee(employee);
     }
 }
+
 export default EmployeeService;

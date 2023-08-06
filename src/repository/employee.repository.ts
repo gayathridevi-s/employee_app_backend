@@ -32,11 +32,11 @@ class EmployeeRepository {
     }
 
 
-    findAnEmployeeByEmail(email: string): Promise<Employee> {
+    findAnEmployeeByUsername(username: string): Promise<Employee> {
        
         return this.employeeRepository.findOne(
             {
-                where:{email:email},                
+                where:{username},                
             }
         );
     }

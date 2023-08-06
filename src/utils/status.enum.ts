@@ -1,5 +1,6 @@
 export enum Status {
-    UI ="UI",
-    DEVELOPER="Developer",
-    HR ="HR"
+
+    PROBATION = "Probation",
+    ACTIVE = "Active",
+    INACTIVE = "Inactive"
 }

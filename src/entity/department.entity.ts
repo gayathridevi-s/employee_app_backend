@@ -11,5 +11,5 @@ export class Department extends AbstractEntity{
     @Column()
     name: string;
      @OneToMany(() => Employee, (employee) => employee.department)
-    employees: Employee
+    employees: Employee[]
 }

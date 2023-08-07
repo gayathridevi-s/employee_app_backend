@@ -40,9 +40,9 @@ class EmployeeRepository {
             }
         );
     }
-    saveEmployee(createEmployeeDto:CreateEmployeeDto):Promise<Employee> {
+    saveEmployee(employee:Employee):Promise<Employee> {
         
-        return this.employeeRepository.save(createEmployeeDto);
+        return this.employeeRepository.save(employee);
     }
    deleteEmployee(employee:Employee):Promise<Employee>{
  return this.employeeRepository.softRemove(employee);

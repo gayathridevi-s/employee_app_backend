@@ -29,7 +29,7 @@ class Employee extends AbstractEntity{
     @Column()
     status: Status;
 
-    @ManyToOne(() => Department, (department) => department.id)
+    @ManyToOne(() => Department, (department) => department.employees)
   @JoinColumn()
   department: Department;
   

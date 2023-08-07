@@ -14,8 +14,6 @@ export class CreateEmployeeDto{
     name:string;
 
     @IsNotEmpty()
-    @Index({ unique: true })
-    @IsString()
     username: string;
 
     @IsNotEmpty()
@@ -38,8 +36,7 @@ export class CreateEmployeeDto{
 
   
     @IsNotEmpty()
-    @Type(()=>CreateDepartmentDto)
-    department:CreateDepartmentDto;
+    departmentId:number;
 
     @IsNotEmpty()
     @IsEnum(Status)

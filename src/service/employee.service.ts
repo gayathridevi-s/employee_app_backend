@@ -9,10 +9,14 @@ import bcrypt from 'bcrypt';
 import jsonwebtoken from "jsonwebtoken"
 import { UpdateEmployeeDto } from "../dto/update-employee.dto";
 import { LoginEmployeeDto } from "../dto/login-employee.dto";
+import { DepartmentService } from "./department.service";
+import { DepartmentRepository } from "../repository/department.repository";
+import dataSource from "../db/postgres.db";
+import { Department } from "../entity/department.entity";
 
 class EmployeeService {
-
-    constructor(private employeeRepository: EmployeeRepository) {
+// departmentRepository=new DepartmentRepository(dataSource.getRepository(Department))
+    constructor(private employeeRepository: EmployeeRepository, private departmentservice: DepartmentService) {
 
 
     }
@@ -27,8 +31,25 @@ class EmployeeService {
         return employee;
     }
     async createEmployee(createEmployeeInput: CreateEmployeeDto): Promise<Employee> {
-        createEmployeeInput.password = await bcrypt.hash(createEmployeeInput.password, 10)
-        return this.employeeRepository.saveEmployee(createEmployeeInput);
+        const address = new Address();
+        address.addressLine1 = createEmployeeInput.address.addressLine1; 
+        address.addressLine2 = createEmployeeInput.address.addressLine2;
+        address.state = createEmployeeInput.address.state;
+        address.city = createEmployeeInput.address.city;
+        address.country = createEmployeeInput.address.country;
+        address.pincode = createEmployeeInput.address.pincode;
+
+        const employee=new Employee();
+        employee.address = address;
+        employee.name=createEmployeeInput.name
+        employee.department=await this.departmentservice.getDepartmentById(Number(createEmployeeInput.departmentId))
+        employee.joiningDate=createEmployeeInput.joiningDate
+        employee.experience=createEmployeeInput.experience
+        employee.role=createEmployeeInput.role
+        employee.username=createEmployeeInput.username
+        employee.status=createEmployeeInput.status;
+        employee.password = await bcrypt.hash(createEmployeeInput.password, 10)
+        return this.employeeRepository.saveEmployee(employee);
 
     }
     async updateEmployee(id: number, updateEmployeeDto: UpdateEmployeeDto): Promise<Employee> {

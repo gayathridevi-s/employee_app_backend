@@ -14,6 +14,11 @@ import { DepartmentRepository } from "../repository/department.repository";
 import dataSource from "../db/postgres.db";
 import { Department } from "../entity/department.entity";
 
+interface LoginResponse {
+    token: string;
+    employeeDetails: Employee 
+  }
+  
 class EmployeeService {
 // departmentRepository=new DepartmentRepository(dataSource.getRepository(Department))
     constructor(private employeeRepository: EmployeeRepository, private departmentservice: DepartmentService) {
@@ -70,21 +75,24 @@ class EmployeeService {
         return this.employeeRepository.saveEmployee(employee);
       }
     
-    loginEmployee = async (loginEmployeeDto:LoginEmployeeDto): Promise<string> => {
-        const employee = await this.employeeRepository.findAnEmployeeByUsername(loginEmployeeDto.username);
-        if (!employee) {
+    loginEmployee = async (loginEmployeeDto:LoginEmployeeDto): Promise<LoginResponse> => {
+        const employeeDetails = await this.employeeRepository.findAnEmployeeByUsername(loginEmployeeDto.username);
+        if (!employeeDetails) {
             throw new HttpException(400, "employee not found");
         }
-        const result = await bcrypt.compare(loginEmployeeDto.password, employee.password);
+        const result = await bcrypt.compare(loginEmployeeDto.password, employeeDetails.password);
         if (!result) {
             throw new HttpException(401, "incorrect username or password");
         }
         const payload = {
-            name: employee.name,
-           username: employee.username,
-            role: employee.role
+            name: employeeDetails.name,
+           username: employeeDetails.username,
+            role: employeeDetails.role
         }
-        return jsonwebtoken.sign(payload, "ABCDE", { expiresIn: "10h" });
+        const token = jsonwebtoken.sign(payload, "ABCDE", { expiresIn: "10h" });
+
+  
+  return { token, employeeDetails };
 
 
     }

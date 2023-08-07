@@ -12,6 +12,7 @@ import { Role } from "../utils/role.enum";
 import { UpdateEmployeeDto } from "../dto/update-employee.dto";
 import { LoginEmployeeDto } from "../dto/login-employee.dto";
 import ValidationException from "../Exception/ValidationException";
+import { responseFormatter } from "../utils/response.formatter";
 
 class EmployeeController {
     public router: express.Router;
@@ -26,13 +27,15 @@ class EmployeeController {
         this.router.put("/:id", authenticate,this.updateEmployee);
         this.router.delete("/:id", authenticate,this.deleteEmployee);
         this.router.post("/login", this.loginEmployee);
+        this.router.patch("/:id",authenticate,authorizeRole([Role.ADMIN]),this.patch)
     }
    
   
 
     getAllEmployees = async (req: express.Request, res: express.Response) => {
         const employees = await this.employeeService.getAllEmployees();
-        res.status(200).send(employees);
+        
+        res.status(200).send(responseFormatter (employees));
     }
 
 
@@ -40,7 +43,7 @@ class EmployeeController {
         try {
             const employeeId = Number(req.params.id);
             const employee = await this.employeeService.getEmployeeById(employeeId);
-            res.status(200).send(employee);
+            res.status(200).send(responseFormatter(employee));
         } catch (error) {
             next(error);
         }
@@ -52,7 +55,7 @@ class EmployeeController {
             const createEmployeeDto = plainToInstance(CreateEmployeeDto, req.body);
           
             const newEmployee = await this.employeeService.createEmployee(createEmployeeDto);
-            res.status(200).send(newEmployee);
+            res.status(200).send(responseFormatter(newEmployee));
         }
         catch (error) {
             next(error);
@@ -65,12 +68,29 @@ class EmployeeController {
 
             const id = Number(req.params.id);
             const newEmployee = await this.employeeService.updateEmployee(id, updateEmployeeDto);
-            res.status(200).send(newEmployee);
+            res.status(200).send(responseFormatter(newEmployee));
         } catch (error) {
             next(error)
         }
 
     }
+    
+    patch = async (req: express.Request, res: express.Response, next: NextFunction) => {
+        try {
+            await this.validateInput(UpdateEmployeeDto, req.body);
+            const updateEmployeeDto = plainToInstance(UpdateEmployeeDto, req.body);
+
+            const id = Number(req.params.id);
+            const employee = await this.employeeService.getEmployeeById(id);
+            await this.employeeService.patch(id, updateEmployeeDto);
+            res.status(200).send(responseFormatter(employee));
+        } catch (error) {
+            next(error)
+        }
+
+    }
+    
+    
     public loginEmployee = async (
         req: express.Request,
         res: express.Response,

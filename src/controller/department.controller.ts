@@ -10,6 +10,7 @@ import ValidationException from "../Exception/ValidationException";
 import authenticate from "../middleware/authenticate.middleware";
 import { authorizeRole } from "../middleware/authorize.middleware";
 import { Role } from "../utils/role.enum";
+import { responseFormatter } from "../utils/response.formatter";
 
 export class DepartmentController {
     public router: Router;
@@ -47,8 +48,8 @@ export class DepartmentController {
     };
   
     getAllDepartments = async (req: express.Request, res: express.Response) => {
-      const employee = await this.departmentService.getAllDepartments();
-      res.status(200).send(employee);
+      const department = await this.departmentService.getAllDepartments();
+      res.status(200).send(responseFormatter(department));
     };
   
     getDepartmentByID = async (
@@ -57,10 +58,10 @@ export class DepartmentController {
       next: NextFunction
     ) => {
       try {
-        const employee = await this.departmentService.getDepartmentById(
+        const department= await this.departmentService.getDepartmentById(
           Number(req.params.id)
         );
-        res.status(200).send(employee);
+        res.status(200).send(responseFormatter(department));
       } catch (error) {
         next(error);
       }
@@ -85,7 +86,7 @@ export class DepartmentController {
           throw new ValidationException(errors);
         }
         const department = await this.departmentService.updateDepartment( id,updateDepartmentDto );
-        res.status(201).send(department);
+        res.status(201).send(responseFormatter(department));
       } catch (err) {
         next(err);
       }
@@ -93,7 +94,7 @@ export class DepartmentController {
   
     deleteDepartment = async (req: express.Request, res: express.Response) => {
       const id = Number(req.params.id);
-      const employee = await this.departmentService.deleteDepartment(id);
-      res.status(201).send(employee);
+      const department = await this.departmentService.deleteDepartment(id);
+      res.status(204).send();
     };
   }

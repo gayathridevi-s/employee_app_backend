@@ -11,7 +11,7 @@ export const authorizeRole=(roles:Role[])=>{
         try{
             const role=req.role;
             if(!roles.includes(role)){
-                throw new HttpException(403,"you are not allowed to create employee");
+                throw new HttpException(403,"you are not authorized to do this");
             }
             next();
     

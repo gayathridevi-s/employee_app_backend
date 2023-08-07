@@ -63,9 +63,14 @@ class EmployeeService {
         return this.employeeRepository.saveEmployee(employee);
       }
       
-
+      async patch(id: number, updateEmployeeDto: UpdateEmployeeDto): Promise<Employee> {
+        const employee = await this.employeeRepository.findAnEmployeeById(id);
+        employee[Object.keys(updateEmployeeDto)[0]] = updateEmployeeDto[Object.keys(updateEmployeeDto)[0]];
+      
+        return this.employeeRepository.saveEmployee(employee);
+      }
     
-    loginEmployee = async (loginEmployeeDto:LoginEmployeeDto) => {
+    loginEmployee = async (loginEmployeeDto:LoginEmployeeDto): Promise<string> => {
         const employee = await this.employeeRepository.findAnEmployeeByUsername(loginEmployeeDto.username);
         if (!employee) {
             throw new HttpException(400, "employee not found");
